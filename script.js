@@ -1,42 +1,48 @@
-function generate() {
+async function generate() {
   const input = document.getElementById("inputText").value;
   const chatBox = document.getElementById("chatBox");
 
   if (!input) return;
 
-  // USER MESSAGE
-  chatBox.innerHTML += `
-    <div class="message user">${input}</div>
+  chatBox.innerHTML += `<div class="message user">${input}</div>`;
+  chatBox.innerHTML += `<div class="message bot">🤖 Thinking...</div>`;
+
+  const prompt = `
+Act as a marketing assistant.
+
+Create:
+- SEO Title
+- Facebook Caption
+- Product Description
+- Hashtags
+
+Topic: ${input}
   `;
 
-  // AI SEARCH RESULT (structured like real job/search output)
-  const response = `
-🔎 SEARCH RESULT
+  const response = await fetch(
+    "https://api-inference.huggingface.co/models/google/flan-t5-base",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
 
-We are hiring an AI Developer with expertise in ${input}.
+        // hf_bAWXHBkrpslFVWCMwoLZrnHSJIPAKeHuc
+        "Authorization": "Bearer hf_YOUR_NEW_TOKEN_HERE"
+      },
+      body: JSON.stringify({
+        inputs: prompt
+      })
+    }
+  );
 
-The candidate should have experience in ${input}, AI APIs, automation tools, and workflow optimization.
+  const data = await response.json();
 
-Responsibilities include building AI-powered systems, integrations, and automation workflows.
+  const output =
+    data[0]?.generated_text ||
+    "No response from AI";
 
-Experience with OpenAI APIs, Zapier, Make, or n8n is highly preferred.
-
-📩 Interested candidates can send CV and portfolio to:
-+974 33865999
-  `;
-
-  chatBox.innerHTML += `
-    <div class="message bot">${response}</div>
-  `;
+  const botMessages = document.querySelectorAll(".bot");
+  botMessages[botMessages.length - 1].innerHTML = output;
 
   document.getElementById("inputText").value = "";
-
-  chatBox.scrollTop = chatBox.scrollHeight;
 }
-
-// ENTER SUPPORT
-document.getElementById("inputText").addEventListener("keydown", function(e) {
-  if (e.key === "Enter") {
-    generate();
-  }
-});
