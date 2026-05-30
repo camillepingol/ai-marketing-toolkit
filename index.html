@@ -3,33 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AI Marketing Toolkit</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>AI Marketing Assistant</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 
 <body>
 
-  <div class="container">
+  <div class="chat-container">
 
-    <h1>AI Marketing Toolkit</h1>
-    <p>Generate marketing content instantly using AI logic</p>
+    <div class="header">
+      🤖 AI Marketing Assistant
+    </div>
 
-    <input 
-      type="text" 
-      id="inputText" 
-      placeholder="Enter product or topic (e.g. coffee shop)" 
-    />
+    <div id="chatBox"></div>
 
-    <select id="task">
-      <option value="blog">📌 Blog Title</option>
-      <option value="caption">📣 Facebook Caption</option>
-      <option value="product">🛍️ Product Description</option>
-      <option value="hashtag"># Hashtags</option>
-    </select>
-
-    <button onclick="generate()">Generate Content</button>
-
-    <div id="result"></div>
+    <div class="input-area">
+      <input type="text" id="inputText" placeholder="Ask something like: coffee shop marketing ideas..." />
+      <button onclick="generate()">Send</button>
+    </div>
 
   </div>
 
