@@ -1,13 +1,7 @@
 async function send() {
-  const input = document.getElementById("input").value;
   const out = document.getElementById("out");
 
-  if (!input.trim()) {
-    out.innerText = "Please enter a prompt.";
-    return;
-  }
-
-  out.innerText = "Thinking...";
+  out.innerText = "Button clicked";
 
   try {
     const res = await fetch("/api/generate", {
@@ -15,33 +9,18 @@ async function send() {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ input })
+      body: JSON.stringify({
+        input: "test"
+      })
     });
+
+    out.innerText = "Status: " + res.status;
 
     const text = await res.text();
 
-    console.log("STATUS:", res.status);
-    console.log("RESPONSE:", text);
-
-    let data;
-
-    try {
-      data = JSON.parse(text);
-    } catch {
-      out.innerText = text;
-      return;
-    }
-
-    if (data.output) {
-      out.innerText = data.output;
-    } else if (data.error) {
-      out.innerText = `Error: ${data.error}`;
-    } else {
-      out.innerText = "No response received.";
-    }
+    out.innerText += "\n\n" + text;
 
   } catch (err) {
-    console.error(err);
-    out.innerText = `Error connecting to API: ${err.message}`;
+    out.innerText = "FETCH ERROR:\n" + err.message;
   }
 }
