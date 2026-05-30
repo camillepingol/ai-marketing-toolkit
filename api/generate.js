@@ -12,6 +12,10 @@ export default async function handler(req, res) {
   try {
     const apiKey = process.env.GROQ_API_KEY;
 
+    // DEBUG (para makita sa logs kung tumatakbo talaga GROQ version)
+    console.log("🔥 GROQ API ROUTE ACTIVE");
+    console.log("KEY EXISTS:", !!apiKey);
+
     if (!apiKey) {
       return res.status(500).json({ error: "Missing GROQ API key" });
     }
@@ -28,21 +32,38 @@ export default async function handler(req, res) {
           model: "llama3-8b-8192",
           messages: [
             {
+              role: "system",
+              content:
+                "You are a marketing expert. Always respond with SEO Title, Facebook Caption, Product Description, and Hashtags."
+            },
+            {
               role: "user",
-              content: `Act as a marketing expert. Create SEO title, Facebook caption, product description, and hashtags for: ${input}`
+              content: input
             }
-          ]
+          ],
+          temperature: 0.7
         })
       }
     );
 
     const data = await response.json();
 
+    console.log("GROQ RESPONSE:", JSON.stringify(data, null, 2));
+
     const output = data?.choices?.[0]?.message?.content;
+
+    if (!output) {
+      return res.status(500).json({
+        error: data?.error?.message || "No response from Groq API",
+        debug: data
+      });
+    }
 
     return res.status(200).json({ output });
 
   } catch (err) {
+    console.error("SERVER ERROR:", err);
+
     return res.status(500).json({
       error: "Server error",
       details: err.message
