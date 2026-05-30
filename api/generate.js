@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
     }
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: {
@@ -28,7 +28,7 @@ module.exports = async (req, res) => {
             {
               parts: [
                 {
-                  text: `Act as a marketing expert. Create SEO title, Facebook caption, product description, and hashtags for: ${input}`
+                  text: `Act as a marketing expert. Create an SEO title, Facebook caption, product description, and hashtags for: ${input}`
                 }
               ]
             }
@@ -39,10 +39,16 @@ module.exports = async (req, res) => {
 
     const data = await response.json();
 
+    console.log("GEMINI RESPONSE:", JSON.stringify(data, null, 2));
+
     const output =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      data?.error?.message ||
-      "No response from AI";
+      data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!output) {
+      return res.status(500).json({
+        error: data?.error?.message || "No AI output returned"
+      });
+    }
 
     return res.status(200).json({ output });
 
