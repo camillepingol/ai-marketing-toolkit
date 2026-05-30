@@ -1,4 +1,4 @@
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -10,43 +10,46 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.GROQ_API_KEY;
 
     if (!apiKey) {
-      return res.status(500).json({ error: "Missing API key" });
+      return res.status(500).json({ error: "Missing GROQ API key in Vercel env" });
     }
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      "https://api.groq.com/openai/v1/chat/completions",
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`
         },
         body: JSON.stringify({
-          contents: [
+          model: "llama3-8b-8192",
+          messages: [
             {
-              parts: [
-                {
-                  text: `Act as a marketing expert. Create an SEO title, Facebook caption, product description, and hashtags for: ${input}`
-                }
-              ]
+              role: "system",
+              content: "You are a marketing expert. Always respond with SEO title, Facebook caption, product description, and hashtags."
+            },
+            {
+              role: "user",
+              content: input
             }
-          ]
+          ],
+          temperature: 0.7
         })
       }
     );
 
     const data = await response.json();
 
-    console.log("GEMINI RESPONSE:", JSON.stringify(data, null, 2));
+    console.log("GROQ RESPONSE:", JSON.stringify(data, null, 2));
 
-    const output =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    const output = data?.choices?.[0]?.message?.content;
 
     if (!output) {
       return res.status(500).json({
-        error: data?.error?.message || "No AI output returned"
+        error: data?.error?.message || "No response from Groq API"
       });
     }
 
@@ -58,4 +61,4 @@ module.exports = async (req, res) => {
       details: err.message
     });
   }
-};
+}
