@@ -6,73 +6,51 @@ function generate() {
 
   chatBox.innerHTML += `<div class="message user">${input}</div>`;
 
-  let topic = input.toLowerCase();
+  const topic = input.toLowerCase();
 
-  let output = "";
+  const seoTitles = [
+    `Best ${input} Strategy for 2026`,
+    `How to Grow Your ${input} Business Fast`,
+    `Top ${input} Marketing Tips You Need`,
+    `${input} Guide for Beginners in 2026`
+  ];
 
-  if (topic.includes("coffee")) {
-    output = `
-📌 SEO Title:
-Best Coffee Shop Marketing Strategy 2026
+  const captions = [
+    `🔥 Learn how to improve your ${input} business today!`,
+    `🚀 Boost your ${input} results with smart marketing!`,
+    `💡 Discover powerful strategies for ${input}!`,
+    `📈 Grow your ${input} faster with proven tips!`
+  ];
 
-📣 Facebook Caption:
-🔥 Grow your coffee business with smart digital marketing!
+  const descriptions = [
+    `High-quality ${input} marketing strategy designed to increase growth and engagement.`,
+    `Professional guide for improving your ${input} business performance and visibility.`,
+    `Complete system to help you scale your ${input} effectively in 2026.`
+  ];
 
-🛍️ Product Description:
-Professional coffee shop marketing system to attract more customers.
+  const hashtags = [
+    `#${input.replace(/\s/g,"")} #Marketing #Business #Growth`,
+    `#${input.replace(/\s/g,"")} #AI #DigitalMarketing #Success`,
+    `#${input.replace(/\s/g,"")} #Strategy #Branding #OnlineBusiness`
+  ];
 
-#️⃣ Hashtags:
-#Coffee #Cafe #Marketing #Business #Growth
-    `;
+  function random(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
   }
 
-  else if (topic.includes("hotel")) {
-    output = `
+  const output = `
 📌 SEO Title:
-Luxury Hotel Marketing Strategy 2026
+${random(seoTitles)}
 
 📣 Facebook Caption:
-🔥 Increase hotel bookings with smart branding!
+${random(captions)}
 
 🛍️ Product Description:
-High-end marketing system designed for hotels.
+${random(descriptions)}
 
 #️⃣ Hashtags:
-#Hotel #Luxury #Travel #Marketing
-    `;
-  }
-
-  else if (topic.includes("food")) {
-    output = `
-📌 SEO Title:
-Food Business Growth Strategy 2026
-
-📣 Facebook Caption:
-🔥 Boost your food business sales today!
-
-🛍️ Product Description:
-Complete marketing system for food businesses.
-
-#️⃣ Hashtags:
-#Food #Business #Marketing #Growth
-    `;
-  }
-
-  else {
-    output = `
-📌 SEO Title:
-Best ${input} Marketing Strategy 2026
-
-📣 Facebook Caption:
-🔥 Learn how to grow your ${input} business!
-
-🛍️ Product Description:
-Smart marketing solution for ${input}.
-
-#️⃣ Hashtags:
-#${input.replace(/\s/g,"")} #Marketing #Business
-    `;
-  }
+${random(hashtags)}
+  `;
 
   chatBox.innerHTML += `<div class="message bot">${output}</div>`;
 }
