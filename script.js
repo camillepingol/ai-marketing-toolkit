@@ -4,11 +4,11 @@ async function generate() {
 
   if (!input) return;
 
-  chatBox.innerHTML += `<div class="message user">${input}</div>`;
-  chatBox.innerHTML += `<div class="message bot">🤖 Thinking...</div>`;
+  chatBox.innerHTML += `<div>User: ${input}</div>`;
+  chatBox.innerHTML += `<div>AI thinking...</div>`;
 
   try {
-    const response = await fetch("/api/generate", {
+    const res = await fetch("/api/generate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -16,13 +16,10 @@ async function generate() {
       body: JSON.stringify({ input })
     });
 
-    const data = await response.json();
+    const data = await res.json();
 
-    chatBox.innerHTML += `<div class="message bot">${data.output || data.error}</div>`;
-
+    chatBox.innerHTML += `<div>AI: ${data.output || data.error}</div>`;
   } catch (err) {
-    chatBox.innerHTML += `<div class="message bot">❌ Error connecting to server</div>`;
+    chatBox.innerHTML += `<div>Error connecting to API</div>`;
   }
-
-  document.getElementById("inputText").value = "";
 }
