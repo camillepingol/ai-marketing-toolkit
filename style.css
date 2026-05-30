@@ -1,75 +1,58 @@
-body{
-    margin:0;
-    font-family: Arial, sans-serif;
-    background:#0f172a;
-    color:white;
+body {
+  font-family: Arial;
+  background: #f5f5f5;
+  margin: 0;
 }
 
-.chat-container{
-    max-width:700px;
-    margin:auto;
-    height:100vh;
-    display:flex;
-    flex-direction:column;
+.container {
+  max-width: 600px;
+  margin: auto;
+  background: white;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
 }
 
-/* HEADER */
-.header{
-    padding:15px;
-    background:#111827;
-    text-align:center;
-    font-weight:bold;
+h1 {
+  text-align: center;
 }
 
-/* INPUT SA TAAS */
-.input-area{
-    display:flex;
-    padding:10px;
-    background:#111827;
-    order:0; /* pinapa-angat */
+#chatBox {
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
-input{
-    flex:1;
-    padding:10px;
-    border:none;
-    border-radius:8px;
-    outline:none;
+.message {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 8px;
 }
 
-button{
-    margin-left:10px;
-    padding:10px 15px;
-    background:#3b82f6;
-    border:none;
-    color:white;
-    border-radius:8px;
-    cursor:pointer;
+.user {
+  background: #d1e7ff;
+  text-align: right;
 }
 
-/* CHAT BOX SA BABA */
-#chatBox{
-    flex:1;
-    padding:15px;
-    overflow-y:auto;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
+.bot {
+  background: #e8ffe8;
+  text-align: left;
 }
 
-/* MESSAGE STYLE */
-.message{
-    padding:10px 15px;
-    border-radius:10px;
-    max-width:80%;
-    white-space:pre-line;
+.inputBox {
+  display: flex;
+  gap: 10px;
 }
 
-.user{
-    background:#3b82f6;
-    margin-left:auto;
+input {
+  flex: 1;
+  padding: 10px;
 }
 
-.bot{
-    background:#1f2937;
+button {
+  padding: 10px 20px;
+  cursor: pointer;
 }
