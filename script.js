@@ -1,53 +1,78 @@
-async function generate() {
+function generate() {
   const input = document.getElementById("inputText").value;
   const chatBox = document.getElementById("chatBox");
 
   if (!input) return;
 
   chatBox.innerHTML += `<div class="message user">${input}</div>`;
-  chatBox.innerHTML += `<div class="message bot" id="loading">🤖 Thinking...</div>`;
 
-  try {
-    const response = await fetch(
-      "https://api-inference.huggingface.co/models/google/flan-t5-base",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer YOUR_NEW_TOKEN_HERE"
-        },
-        body: JSON.stringify({
-          inputs: `
-Act as a professional marketing expert.
+  let topic = input.toLowerCase();
 
-Topic: ${input}
+  let output = "";
 
-Return:
-- SEO Title
-- Facebook Caption
-- Product Description
-- Hashtags
-          `
-        })
-      }
-    );
+  if (topic.includes("coffee")) {
+    output = `
+📌 SEO Title:
+Best Coffee Shop Marketing Strategy 2026
 
-    const data = await response.json();
+📣 Facebook Caption:
+🔥 Grow your coffee business with smart digital marketing!
 
-    console.log(data);
+🛍️ Product Description:
+Professional coffee shop marketing system to attract more customers.
 
-    let output =
-      data?.[0]?.generated_text ||
-      data?.generated_text ||
-      data?.error ||
-      JSON.stringify(data);
-
-    document.getElementById("loading").innerHTML = output;
-
-  } catch (err) {
-    document.getElementById("loading").innerHTML =
-      "❌ Connection error";
+#️⃣ Hashtags:
+#Coffee #Cafe #Marketing #Business #Growth
+    `;
   }
 
-  document.getElementById("inputText").value = "";
+  else if (topic.includes("hotel")) {
+    output = `
+📌 SEO Title:
+Luxury Hotel Marketing Strategy 2026
+
+📣 Facebook Caption:
+🔥 Increase hotel bookings with smart branding!
+
+🛍️ Product Description:
+High-end marketing system designed for hotels.
+
+#️⃣ Hashtags:
+#Hotel #Luxury #Travel #Marketing
+    `;
+  }
+
+  else if (topic.includes("food")) {
+    output = `
+📌 SEO Title:
+Food Business Growth Strategy 2026
+
+📣 Facebook Caption:
+🔥 Boost your food business sales today!
+
+🛍️ Product Description:
+Complete marketing system for food businesses.
+
+#️⃣ Hashtags:
+#Food #Business #Marketing #Growth
+    `;
+  }
+
+  else {
+    output = `
+📌 SEO Title:
+Best ${input} Marketing Strategy 2026
+
+📣 Facebook Caption:
+🔥 Learn how to grow your ${input} business!
+
+🛍️ Product Description:
+Smart marketing solution for ${input}.
+
+#️⃣ Hashtags:
+#${input.replace(/\s/g,"")} #Marketing #Business
+    `;
+  }
+
+  chatBox.innerHTML += `<div class="message bot">${output}</div>`;
 }
