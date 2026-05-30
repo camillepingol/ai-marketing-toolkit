@@ -36,7 +36,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "No AI output returned" });
     }
 
-    res.status(200).json({ output });
+    res.status(200).json({ output }); 
 
   } catch (err) {
     res.status(500).json({ error: "API failed", details: err.message });
