@@ -1,6 +1,4 @@
-
 module.exports = async (req, res) => {
-  // Allow only POST requests
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -15,7 +13,7 @@ module.exports = async (req, res) => {
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-      return res.status(500).json({ error: "Missing API key (ENV not set)" });
+      return res.status(500).json({ error: "Missing API key" });
     }
 
     const response = await fetch(
@@ -41,8 +39,6 @@ module.exports = async (req, res) => {
 
     const data = await response.json();
 
-    console.log("GEMINI RESPONSE:", JSON.stringify(data, null, 2));
-
     const output =
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
       data?.error?.message ||
@@ -51,8 +47,6 @@ module.exports = async (req, res) => {
     return res.status(200).json({ output });
 
   } catch (err) {
-    console.error(err);
-
     return res.status(500).json({
       error: "Server error",
       details: err.message
