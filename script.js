@@ -1,44 +1,34 @@
 function generate() {
   const input = document.getElementById("inputText").value;
-  const task = document.getElementById("task").value;
-  const result = document.getElementById("result");
+  const chatBox = document.getElementById("chatBox");
 
-  if (!input) {
-    result.innerHTML = "⚠️ Please enter a topic.";
-    return;
-  }
+  if (!input) return;
 
-  let output = "";
+  // USER MESSAGE
+  chatBox.innerHTML += `
+    <div class="message user">${input}</div>
+  `;
 
-  if (task === "blog") {
-    output = `
-📌 SEO Titles:
-- ${input} Guide for Beginners
-- Top Insights About ${input}
-- Best Strategies for ${input}
-`;
-  }
+  // AI RESPONSE (structured marketing output)
+  const response = `
+📌 SEO Title:
+Best ${input} Guide for 2026
 
-  else if (task === "caption") {
-    output = `
 📣 Facebook Caption:
-🔥 Discover everything about ${input}! Don’t miss out on the latest updates and offers!
-`;
-  }
+🔥 Learn everything about ${input} and grow your business today!
 
-  else if (task === "product") {
-    output = `
 🛍️ Product Description:
-High-quality ${input} designed to deliver excellent performance and value for customers.
-`;
-  }
+High-quality ${input} designed for performance and value.
 
-  else if (task === "hashtag") {
-    output = `
 #️⃣ Hashtags:
-#${input.replace(/\s/g,'')} #Business #Marketing #Qatar #Success #Digital
-`;
-  }
+#${input.replace(/\s/g,'')} #Marketing #Business #AI #Growth
+  `;
 
-  result.innerHTML = output;
+  chatBox.innerHTML += `
+    <div class="message bot">${response}</div>
+  `;
+
+  document.getElementById("inputText").value = "";
+
+  chatBox.scrollTop = chatBox.scrollHeight;
 }
