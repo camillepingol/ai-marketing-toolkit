@@ -12,8 +12,13 @@ export default async function handler(req, res) {
   try {
     const apiKey = process.env.GROQ_API_KEY;
 
+    // 🔍 DEBUG: check if key is loaded
+    console.log("GROQ KEY EXISTS:", !!apiKey);
+
     if (!apiKey) {
-      return res.status(500).json({ error: "Missing GROQ API key in Vercel env" });
+      return res.status(500).json({
+        error: "Missing GROQ API key in Vercel env"
+      });
     }
 
     const response = await fetch(
@@ -49,13 +54,16 @@ export default async function handler(req, res) {
 
     if (!output) {
       return res.status(500).json({
-        error: data?.error?.message || "No response from Groq API"
+        error: data?.error?.message || "No response from Groq API",
+        debug: data
       });
     }
 
     return res.status(200).json({ output });
 
   } catch (err) {
+    console.error("SERVER ERROR:", err);
+
     return res.status(500).json({
       error: "Server error",
       details: err.message
