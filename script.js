@@ -1,23 +1,44 @@
-function generateContent() {
+function generate() {
+  const input = document.getElementById("inputText").value;
+  const task = document.getElementById("task").value;
+  const result = document.getElementById("result");
 
-let topic = document.getElementById("topic").value;
+  if (!input) {
+    result.innerHTML = "⚠️ Please enter a topic.";
+    return;
+  }
 
-let result = `
-<h2>Generated Content</h2>
+  let output = "";
 
-<h3>SEO Title</h3>
-<p>Best ${topic} in Qatar</p>
-
-<h3>Facebook Caption</h3>
-<p>Looking for quality ${topic}? Check out our latest offers today!</p>
-
-<h3>Product Description</h3>
-<p>Premium ${topic} designed to provide excellent value and customer satisfaction.</p>
-
-<h3>Hashtags</h3>
-<p>#${topic.replace(/\s+/g,'')} #QatarBusiness #Marketing #Sales</p>
+  if (task === "blog") {
+    output = `
+📌 SEO Titles:
+- ${input} Guide for Beginners
+- Top Insights About ${input}
+- Best Strategies for ${input}
 `;
+  }
 
-document.getElementById("result").innerHTML = result;
+  else if (task === "caption") {
+    output = `
+📣 Facebook Caption:
+🔥 Discover everything about ${input}! Don’t miss out on the latest updates and offers!
+`;
+  }
 
+  else if (task === "product") {
+    output = `
+🛍️ Product Description:
+High-quality ${input} designed to deliver excellent performance and value for customers.
+`;
+  }
+
+  else if (task === "hashtag") {
+    output = `
+#️⃣ Hashtags:
+#${input.replace(/\s/g,'')} #Business #Marketing #Qatar #Success #Digital
+`;
+  }
+
+  result.innerHTML = output;
 }
