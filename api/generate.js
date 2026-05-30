@@ -12,13 +12,8 @@ export default async function handler(req, res) {
   try {
     const apiKey = process.env.GROQ_API_KEY;
 
-    // 🔍 DEBUG: check if key is loaded
-    console.log("GROQ KEY EXISTS:", !!apiKey);
-
     if (!apiKey) {
-      return res.status(500).json({
-        error: "Missing GROQ API key in Vercel env"
-      });
+      return res.status(500).json({ error: "Missing GROQ API key" });
     }
 
     const response = await fetch(
@@ -34,7 +29,8 @@ export default async function handler(req, res) {
           messages: [
             {
               role: "system",
-              content: "You are a marketing expert. Always respond with SEO title, Facebook caption, product description, and hashtags."
+              content:
+                "You are a professional marketing expert. Always respond with: SEO Title, Facebook Caption, Product Description, and Hashtags."
             },
             {
               role: "user",
@@ -62,8 +58,6 @@ export default async function handler(req, res) {
     return res.status(200).json({ output });
 
   } catch (err) {
-    console.error("SERVER ERROR:", err);
-
     return res.status(500).json({
       error: "Server error",
       details: err.message
