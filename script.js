@@ -7,42 +7,47 @@ async function generate() {
   chatBox.innerHTML += `<div class="message user">${input}</div>`;
   chatBox.innerHTML += `<div class="message bot">🤖 Thinking...</div>`;
 
-  const prompt = `
-Act as a marketing assistant.
+  const prompt = `Marketing assistant: ${input}`;
 
-Create:
-- SEO Title
-- Facebook Caption
-- Product Description
-- Hashtags
+  try {
+    const response = await fetch(
+      "https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer hf_YOUR_TOKEN_HERE"
+        },
+        body: JSON.stringify({
+          inputs: prompt
+        })
+      }
+    );
 
-Topic: ${input}
-  `;
+    const data = await response.json();
 
-  const response = await fetch(
-    "https://api-inference.huggingface.co/models/google/flan-t5-base",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    console.log(data); // 🔥 important para makita mo error
 
-        // hf_bAWXHBkrpslFVWCMwoLZrnHSJIPAKeHuc
-        "Authorization": "Bearer hf_YOUR_NEW_TOKEN_HERE"
-      },
-      body: JSON.stringify({
-        inputs: prompt
-      })
+    let output = "";
+
+    if (data.error) {
+      output = "⚠️ API Error: " + data.error;
+    } else if (data.generated_text) {
+      output = data.generated_text;
+    } else if (data[0]?.generated_text) {
+      output = data[0].generated_text;
+    } else {
+      output = JSON.stringify(data);
     }
-  );
 
-  const data = await response.json();
+    const botMessages = document.querySelectorAll(".bot");
+    botMessages[botMessages.length - 1].innerHTML = output;
 
-  const output =
-    data[0]?.generated_text ||
-    "No response from AI";
-
-  const botMessages = document.querySelectorAll(".bot");
-  botMessages[botMessages.length - 1].innerHTML = output;
+  } catch (err) {
+    const botMessages = document.querySelectorAll(".bot");
+    botMessages[botMessages.length - 1].innerHTML =
+      "⚠️ Connection error (check API or token)";
+  }
 
   document.getElementById("inputText").value = "";
 }
