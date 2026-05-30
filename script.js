@@ -4,8 +4,8 @@ async function generate() {
 
   if (!input) return;
 
-  chatBox.innerHTML += `<div>User: ${input}</div>`;
-  chatBox.innerHTML += `<div>AI thinking...</div>`;
+  chatBox.innerHTML += `<div>👤 ${input}</div>`;
+  chatBox.innerHTML += `<div>🤖 Thinking...</div>`;
 
   try {
     const res = await fetch("/api/generate", {
@@ -18,8 +18,16 @@ async function generate() {
 
     const data = await res.json();
 
-    chatBox.innerHTML += `<div>AI: ${data.output || data.error}</div>`;
+    console.log("API RESPONSE:", data); // important debug
+
+    const reply = data.output || data.error || "No response";
+
+    chatBox.innerHTML += `<div>🤖 ${reply}</div>`;
+
   } catch (err) {
-    chatBox.innerHTML += `<div>Error connecting to API</div>`;
+    chatBox.innerHTML += `<div>❌ Error connecting to API</div>`;
+    console.log(err);
   }
+
+  document.getElementById("inputText").value = "";
 }
