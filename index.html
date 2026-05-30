@@ -1,16 +1,39 @@
-<div class="container">
-  <h1>AI Marketing Toolkit</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Marketing Toolkit</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
 
-  <input type="text" id="inputText" placeholder="Enter product or topic..." />
+<body>
 
-  <select id="task">
-    <option value="blog">Blog Title</option>
-    <option value="caption">Facebook Caption</option>
-    <option value="product">Product Description</option>
-    <option value="hashtag">Hashtags</option>
-  </select>
+  <div class="container">
 
-  <button onclick="generate()">Generate</button>
+    <h1>AI Marketing Toolkit</h1>
+    <p>Generate marketing content instantly using AI logic</p>
 
-  <div id="result"></div>
-</div>
+    <input 
+      type="text" 
+      id="inputText" 
+      placeholder="Enter product or topic (e.g. coffee shop)" 
+    />
+
+    <select id="task">
+      <option value="blog">📌 Blog Title</option>
+      <option value="caption">📣 Facebook Caption</option>
+      <option value="product">🛍️ Product Description</option>
+      <option value="hashtag"># Hashtags</option>
+    </select>
+
+    <button onclick="generate()">Generate Content</button>
+
+    <div id="result"></div>
+
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
