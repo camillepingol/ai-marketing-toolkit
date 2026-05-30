@@ -9,19 +9,20 @@ function generate() {
     <div class="message user">${input}</div>
   `;
 
-  // AI RESPONSE (structured marketing output)
+  // AI SEARCH RESULT (structured like real job/search output)
   const response = `
-📌 SEO Title:
-Best ${input} Guide for 2026
+🔎 SEARCH RESULT
 
-📣 Facebook Caption:
-🔥 Learn everything about ${input} and grow your business today!
+We are hiring an AI Developer with expertise in ${input}.
 
-🛍️ Product Description:
-High-quality ${input} designed for performance and value.
+The candidate should have experience in ${input}, AI APIs, automation tools, and workflow optimization.
 
-#️⃣ Hashtags:
-#${input.replace(/\s/g,'')} #Marketing #Business #AI #Growth
+Responsibilities include building AI-powered systems, integrations, and automation workflows.
+
+Experience with OpenAI APIs, Zapier, Make, or n8n is highly preferred.
+
+📩 Interested candidates can send CV and portfolio to:
++974 33865999
   `;
 
   chatBox.innerHTML += `
@@ -32,3 +33,10 @@ High-quality ${input} designed for performance and value.
 
   chatBox.scrollTop = chatBox.scrollHeight;
 }
+
+// ENTER SUPPORT
+document.getElementById("inputText").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
+    generate();
+  }
+});
