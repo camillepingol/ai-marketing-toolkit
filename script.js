@@ -1,14 +1,16 @@
-async function generate() {
-  const input = document.getElementById("inputText").value;
-  const chatBox = document.getElementById("chatBox");
+async function send() {
+  const input = document.getElementById("input").value;
+  const out = document.getElementById("out");
 
-  if (!input) return;
+  if (!input) {
+    out.innerText = "Please type something...";
+    return;
+  }
 
-  chatBox.innerHTML += `<div>👤 ${input}</div>`;
-  chatBox.innerHTML += `<div>🤖 Thinking...</div>`;
+  out.innerText = "Thinking...";
 
   try {
-    const res = await fetch("/api/generate", {
+    const res = await fetch("/generate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -18,16 +20,10 @@ async function generate() {
 
     const data = await res.json();
 
-    console.log("API RESPONSE:", data); // important debug
-
-    const reply = data.output || data.error || "No response";
-
-    chatBox.innerHTML += `<div>🤖 ${reply}</div>`;
+    out.innerText = data.output || data.error || "No response";
 
   } catch (err) {
-    chatBox.innerHTML += `<div>❌ Error connecting to API</div>`;
     console.log(err);
+    out.innerText = "Error connecting to API";
   }
-
-  document.getElementById("inputText").value = "";
 }
