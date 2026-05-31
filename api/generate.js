@@ -1,72 +1,18 @@
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Marketing Toolkit</title>
+</head>
+<body>
 
-  const { input } = req.body || {};
+<h1>🤖 AI Marketing Toolkit</h1>
 
-  if (!input) {
-    return res.status(400).json({ error: "No input received" });
-  }
+<input id="input" placeholder="Type coffee marketing ideas..." />
+<button onclick="send()">Send</button>
 
-  try {
-    const apiKey = process.env.GROQ_API_KEY;
+<pre id="out"></pre>
 
-    // DEBUG (para makita sa logs kung tumatakbo talaga GROQ version)
-    console.log("🔥 GROQ API ROUTE ACTIVE");
-    console.log("KEY EXISTS:", !!apiKey);
+<script src="script.js"></script>
 
-    if (!apiKey) {
-      return res.status(500).json({ error: "Missing GROQ API key" });
-    }
-
-    const response = await fetch(
-      "https://api.groq.com/openai/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          model: "llama3-8b-8192",
-          messages: [
-            {
-              role: "system",
-              content:
-                "You are a marketing expert. Always respond with SEO Title, Facebook Caption, Product Description, and Hashtags."
-            },
-            {
-              role: "user",
-              content: input
-            }
-          ],
-          temperature: 0.7
-        })
-      }
-    );
-
-    const data = await response.json();
-
-    console.log("GROQ RESPONSE:", JSON.stringify(data, null, 2));
-
-    const output = data?.choices?.[0]?.message?.content;
-
-    if (!output) {
-      return res.status(500).json({
-        error: data?.error?.message || "No response from Groq API",
-        debug: data
-      });
-    }
-
-    return res.status(200).json({ output });
-
-  } catch (err) {
-    console.error("SERVER ERROR:", err);
-
-    return res.status(500).json({
-      error: "Server error",
-      details: err.message
-    });
-  }
-}
+</body>
+</html>
