@@ -1,8 +1,10 @@
-async function send(promptOverride = null) {
+let currentMode = "default";
+
+async function send() {
   const input = document.getElementById("input");
   const chat = document.getElementById("chat");
 
-  const text = (promptOverride || input.value).trim();
+  const text = input.value.trim();
   if (!text) return;
 
   chat.innerHTML += `<div class="msg user">${text}</div>`;
@@ -15,23 +17,20 @@ async function send(promptOverride = null) {
   try {
     const res = await fetch("/api/generate", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ input: text })
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        input: text,
+        mode: currentMode
+      })
     });
 
     const data = await res.json();
 
     document.getElementById(loadingId).remove();
 
-    const id = "ai" + Date.now();
-
-    chat.innerHTML += `
-      <div class="msg ai" id="${id}">
-        <div class="copy" onclick="copyText('${id}')">copy</div>
-        ${data.output || data.error}
-      </div>
-    `;
-
+    chat.innerHTML += `<div class="msg ai">${data.output || data.error}</div>`;
     chat.scrollTop = chat.scrollHeight;
 
   } catch (err) {
@@ -40,16 +39,6 @@ async function send(promptOverride = null) {
   }
 }
 
-// quick prompts
-function quick(type) {
-  const input = document.getElementById("input");
-  input.value = `Create ${type} for coffee business`;
-  send();
-}
-
-// copy function
-function copyText(id) {
-  const text = document.getElementById(id).innerText;
-  navigator.clipboard.writeText(text.replace("copy", ""));
-  alert("Copied!");
+function setMode(mode) {
+  currentMode = mode;
 }
