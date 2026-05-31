@@ -1,13 +1,18 @@
 async function send() {
-  const input = document.getElementById("input").value;
-  const out = document.getElementById("out");
+  const input = document.getElementById("input");
+  const chat = document.getElementById("chat");
 
-  if (!input.trim()) {
-    out.innerText = "Please type something...";
-    return;
-  }
+  const text = input.value.trim();
+  if (!text) return;
 
-  out.innerText = "Thinking... 🤖";
+  // user message
+  chat.innerHTML += `<div class="msg user">${text}</div>`;
+  input.value = "";
+
+  // loading
+  const loadingId = "loading";
+  chat.innerHTML += `<div class="msg ai loading" id="${loadingId}">Generating...</div>`;
+  chat.scrollTop = chat.scrollHeight;
 
   try {
     const res = await fetch("/api/generate", {
@@ -15,18 +20,18 @@ async function send() {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ input })
+      body: JSON.stringify({ input: text })
     });
 
     const data = await res.json();
 
-    if (data.output) {
-      out.innerText = data.output;
-    } else {
-      out.innerText = "Error: " + (data.error || "No response");
-    }
+    document.getElementById(loadingId).remove();
+
+    chat.innerHTML += `<div class="msg ai">${data.output || data.error}</div>`;
+    chat.scrollTop = chat.scrollHeight;
 
   } catch (err) {
-    out.innerText = "Error connecting to API: " + err.message;
+    document.getElementById(loadingId).remove();
+    chat.innerHTML += `<div class="msg ai">Error: ${err.message}</div>`;
   }
 }
