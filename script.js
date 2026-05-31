@@ -8,8 +8,8 @@ async function send(promptOverride = null) {
   chat.innerHTML += `<div class="msg user">${text}</div>`;
   input.value = "";
 
-  const id = "loading";
-  chat.innerHTML += `<div class="msg ai typing" id="${id}">Generating response...</div>`;
+  const loadingId = "loading";
+  chat.innerHTML += `<div class="msg ai" id="${loadingId}">Generating...</div>`;
   chat.scrollTop = chat.scrollHeight;
 
   try {
@@ -21,13 +21,13 @@ async function send(promptOverride = null) {
 
     const data = await res.json();
 
-    document.getElementById(id).remove();
+    document.getElementById(loadingId).remove();
 
-    const msgId = "ai" + Date.now();
+    const id = "ai" + Date.now();
 
     chat.innerHTML += `
-      <div class="msg ai" id="${msgId}">
-        <div class="copy" onclick="copyText('${msgId}')">copy</div>
+      <div class="msg ai" id="${id}">
+        <div class="copy" onclick="copyText('${id}')">copy</div>
         ${data.output || data.error}
       </div>
     `;
@@ -35,12 +35,12 @@ async function send(promptOverride = null) {
     chat.scrollTop = chat.scrollHeight;
 
   } catch (err) {
-    document.getElementById(id).remove();
+    document.getElementById(loadingId).remove();
     chat.innerHTML += `<div class="msg ai">Error: ${err.message}</div>`;
   }
 }
 
-// quick templates
+// quick prompts
 function quick(type) {
   const input = document.getElementById("input");
   input.value = `Create ${type} for coffee business`;
