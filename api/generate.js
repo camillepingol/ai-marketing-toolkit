@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     const apiKey = process.env.GROQ_API_KEY;
 
     if (!apiKey) {
-      return res.status(500).json({ error: "Missing GROQ API key" });
+      return res.status(500).json({ error: "Missing GROQ_API_KEY" });
     }
 
     const response = await fetch(
@@ -22,33 +22,41 @@ export default async function handler(req, res) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`
+          Authorization: `Bearer ${apiKey}`
         },
         body: JSON.stringify({
-          model: "llama3-8b-8192",
+          model: "llama-3.3-70b-versatile",
           messages: [
             {
               role: "system",
               content:
-                "You are a marketing expert. Always respond with SEO Title, Facebook Caption, Product Description, and Hashtags."
+                "You are a professional marketing expert. Create SEO Title, Facebook Caption, Product Description, and Hashtags."
             },
             {
               role: "user",
               content: input
             }
           ],
-          temperature: 0.7
+          temperature: 0.7,
+          max_tokens: 1000
         })
       }
     );
 
     const data = await response.json();
 
+    if (!response.ok) {
+      return res.status(response.status).json({
+        error: data?.error?.message || "Groq API error",
+        debug: data
+      });
+    }
+
     const output = data?.choices?.[0]?.message?.content;
 
     if (!output) {
       return res.status(500).json({
-        error: data?.error?.message || "No response from Groq API",
+        error: "No response from AI",
         debug: data
       });
     }
@@ -57,8 +65,7 @@ export default async function handler(req, res) {
 
   } catch (err) {
     return res.status(500).json({
-      error: "Server error",
-      details: err.message
+      error: err.message
     });
   }
 }
