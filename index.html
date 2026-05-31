@@ -1,24 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Marketing Toolkit</title>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      font-family: Arial;
+      font-family: Arial, sans-serif;
       background: #0b1220;
       color: white;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      padding: 15px;
     }
 
     .app {
       width: 100%;
-      max-width: 900px;
+      max-width: 1000px;
+      height: 90vh;
       background: #111827;
       border-radius: 16px;
       overflow: hidden;
@@ -28,41 +35,47 @@
     }
 
     .header {
-      padding: 14px;
-      text-align: center;
-      font-weight: bold;
       background: #1f2937;
+      padding: 16px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
     }
 
     .toolbar {
       display: flex;
+      flex-wrap: wrap;
       gap: 8px;
       padding: 10px;
       background: #0f172a;
-      flex-wrap: wrap;
     }
 
     .toolbar button {
       background: #2563eb;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 8px;
       color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
       cursor: pointer;
-      font-size: 12px;
+      font-size: 13px;
+    }
+
+    .toolbar button:hover {
+      opacity: 0.9;
     }
 
     #chat {
-      height: 450px;
+      flex: 1;
       overflow-y: auto;
-      padding: 10px;
+      padding: 15px;
     }
 
     .msg {
-      padding: 10px;
-      margin: 8px 0;
+      padding: 12px;
       border-radius: 10px;
+      margin-bottom: 10px;
       white-space: pre-wrap;
+      word-wrap: break-word;
     }
 
     .user {
@@ -72,30 +85,62 @@
 
     .ai {
       background: #374151;
+      position: relative;
+    }
+
+    .copy {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #111827;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
     }
 
     .input-area {
       display: flex;
       gap: 10px;
-      padding: 10px;
+      padding: 12px;
       background: #0f172a;
     }
 
     input {
       flex: 1;
-      padding: 12px;
-      border-radius: 10px;
       border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 15px;
       outline: none;
     }
 
-    button.send {
-      padding: 12px 16px;
-      border: none;
-      border-radius: 10px;
+    .send-btn {
       background: #22c55e;
       color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 18px;
       cursor: pointer;
+      font-weight: bold;
+    }
+
+    .send-btn:hover {
+      opacity: 0.9;
+    }
+
+    @media (max-width: 600px) {
+      .toolbar {
+        justify-content: center;
+      }
+
+      .input-area {
+        flex-direction: column;
+      }
+
+      .send-btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -104,20 +149,32 @@
 
 <div class="app">
 
-  <div class="header">🤖 AI Marketing Toolkit</div>
+  <div class="header">
+    🤖 AI Marketing Toolkit
+  </div>
 
   <div class="toolbar">
-    <button onclick="setMode('default')">Default</button>
-    <button onclick="setMode('seo')">SEO</button>
-    <button onclick="setMode('ads')">Ads</button>
-    <button onclick="setMode('product')">Product</button>
+    <button onclick="quick('SEO Title')">SEO</button>
+    <button onclick="quick('Facebook Ad Caption')">Facebook</button>
+    <button onclick="quick('Product Description')">Product</button>
+    <button onclick="quick('Hashtags')">Hashtags</button>
+
+    <button onclick="showHistory()">History</button>
+    <button onclick="clearHistory()">Clear</button>
   </div>
 
   <div id="chat"></div>
 
   <div class="input-area">
-    <input id="input" placeholder="Type your idea..." />
-    <button class="send" onclick="send()">Send</button>
+    <input
+      id="input"
+      type="text"
+      placeholder="Type your marketing idea..."
+    >
+
+    <button class="send-btn" onclick="send()">
+      Send
+    </button>
   </div>
 
 </div>
