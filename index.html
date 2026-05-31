@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Marketing SaaS</title>
+  <title>AI Marketing Toolkit</title>
 
   <style>
     body {
@@ -12,8 +12,8 @@
       color: white;
       display: flex;
       justify-content: center;
-      height: 100vh;
       align-items: center;
+      height: 100vh;
     }
 
     .app {
@@ -72,18 +72,6 @@
 
     .ai {
       background: #374151;
-      position: relative;
-    }
-
-    .copy {
-      position: absolute;
-      top: 5px;
-      right: 8px;
-      font-size: 10px;
-      cursor: pointer;
-      background: #111827;
-      padding: 3px 6px;
-      border-radius: 6px;
     }
 
     .input-area {
@@ -116,13 +104,13 @@
 
 <div class="app">
 
-  <div class="header">🤖 AI Marketing SaaS Tool</div>
+  <div class="header">🤖 AI Marketing Toolkit</div>
 
   <div class="toolbar">
-    <button onclick="quick('SEO Title')">SEO</button>
-    <button onclick="quick('Facebook Ad Caption')">Facebook</button>
-    <button onclick="quick('Product Description')">Product</button>
-    <button onclick="quick('Hashtags')">Hashtags</button>
+    <button onclick="setMode('default')">Default</button>
+    <button onclick="setMode('seo')">SEO</button>
+    <button onclick="setMode('ads')">Ads</button>
+    <button onclick="setMode('product')">Product</button>
   </div>
 
   <div id="chat"></div>
