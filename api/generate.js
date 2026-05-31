@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { input } = req.body || {};
+  const { input, mode } = req.body || {};
 
   if (!input) {
     return res.status(400).json({ error: "No input received" });
@@ -16,48 +16,76 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Missing GROQ_API_KEY" });
     }
 
+    let systemPrompt = `
+You are a professional marketing expert.
+Return structured marketing content.
+`;
+
+    if (mode === "seo") {
+      systemPrompt = `
+Return strictly:
+
+SEO Title:
+Facebook Caption:
+Product Description:
+Hashtags:
+`;
+    }
+
+    if (mode === "ads") {
+      systemPrompt = `
+Return strictly:
+
+Ad Headline:
+Primary Text:
+Call To Action:
+Hashtags:
+`;
+    }
+
+    if (mode === "product") {
+      systemPrompt = `
+Return strictly:
+
+Product Name:
+Description:
+Benefits:
+Hashtags:
+`;
+    }
+
     const response = await fetch(
       "https://api.groq.com/openai/v1/chat/completions",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`
+          "Authorization": `Bearer ${apiKey}`
         },
         body: JSON.stringify({
           model: "llama-3.3-70b-versatile",
           messages: [
             {
               role: "system",
-              content:
-                "You are a professional marketing expert. Create SEO Title, Facebook Caption, Product Description, and Hashtags."
+              content: systemPrompt
             },
             {
               role: "user",
               content: input
             }
           ],
-          temperature: 0.7,
-          max_tokens: 1000
+          temperature: 0.7
         })
       }
     );
 
     const data = await response.json();
 
-    if (!response.ok) {
-      return res.status(response.status).json({
-        error: data?.error?.message || "Groq API error",
-        debug: data
-      });
-    }
-
     const output = data?.choices?.[0]?.message?.content;
 
     if (!output) {
       return res.status(500).json({
-        error: "No response from AI",
-        debug: data
+        error: data?.error?.message || "No response from AI"
       });
     }
 
