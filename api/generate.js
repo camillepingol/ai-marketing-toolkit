@@ -1,18 +1,64 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>AI Marketing Toolkit</title>
-</head>
-<body>
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
 
-<h1>🤖 AI Marketing Toolkit</h1>
+  const { input } = req.body || {};
 
-<input id="input" placeholder="Type coffee marketing ideas..." />
-<button onclick="send()">Send</button>
+  if (!input) {
+    return res.status(400).json({ error: "No input received" });
+  }
 
-<pre id="out"></pre>
+  try {
+    const apiKey = process.env.GROQ_API_KEY;
 
-<script src="script.js"></script>
+    if (!apiKey) {
+      return res.status(500).json({ error: "Missing GROQ API key" });
+    }
 
-</body>
-</html>
+    const response = await fetch(
+      "https://api.groq.com/openai/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: "llama3-8b-8192",
+          messages: [
+            {
+              role: "system",
+              content:
+                "You are a marketing expert. Always respond with SEO Title, Facebook Caption, Product Description, and Hashtags."
+            },
+            {
+              role: "user",
+              content: input
+            }
+          ],
+          temperature: 0.7
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    const output = data?.choices?.[0]?.message?.content;
+
+    if (!output) {
+      return res.status(500).json({
+        error: data?.error?.message || "No response from Groq API",
+        debug: data
+      });
+    }
+
+    return res.status(200).json({ output });
+
+  } catch (err) {
+    return res.status(500).json({
+      error: "Server error",
+      details: err.message
+    });
+  }
+}
